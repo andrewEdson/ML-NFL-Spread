@@ -153,8 +153,6 @@ numerical_features = base_numerical_features + team_features
 categorical_features = [
     "away_team",
     "home_team",
-    "roof",
-    "surface",
     "div_game",
     "away_qb_name",
     "home_qb_name",
