@@ -3,10 +3,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import glob
+import pickle
 
 
 def load_latest_model(model_type):
-    """Load the most recent model of specified type (xgb, rf, or lgbm)"""
+    """Load the most recent model of specified type (xgb, rf, lgbm, or catboost)"""
     models_dir = "models"
 
     if model_type == "lgbm":
@@ -54,6 +55,60 @@ def load_latest_model(model_type):
             "accuracy": 0.5212,  # From your recent run
             "model_type": "lgbm",
         }
+
+    elif model_type == "catboost":
+        # CatBoost model saved as .pkl file but using CatBoost's save_model format
+        pattern = "cat_boost_nfl_spread_model_*.pkl"
+        model_files = glob.glob(os.path.join(models_dir, pattern))
+
+        if not model_files:
+            print(f"No {model_type} models found!")
+            return None
+
+        # Get the most recent model file
+        latest_file = sorted(model_files)[-1]
+        print(f"Loading {model_type} model: {os.path.basename(latest_file)}")
+
+        # Load CatBoost model
+        from catboost import CatBoostClassifier
+
+        catboost_model = CatBoostClassifier()
+        catboost_model.load_model(latest_file)
+
+        # Load corresponding metadata file
+        # Extract timestamp from filename (format: cat_boost_nfl_spread_model_YYYYMMDD_HHMMSS_accX.XXX.pkl)
+        base_name = os.path.basename(latest_file)
+        # Extract timestamp parts: split by _ and get parts 5 and 6, then join with _
+        parts = base_name.split("_")
+        timestamp = f"{parts[5]}_{parts[6]}"  # YYYYMMDD_HHMMSS
+        metadata_pattern = f"cat_boost_metadata_{timestamp}.pkl"
+        metadata_files = glob.glob(os.path.join(models_dir, metadata_pattern))
+
+        if metadata_files:
+            with open(metadata_files[0], "rb") as f:
+                metadata = pickle.load(f)
+
+            return {
+                "model": catboost_model,
+                "feature_columns": metadata["feature_columns"],
+                "accuracy": metadata["accuracy"],
+                "model_type": "catboost",
+            }
+        else:
+            # Fallback if no metadata found
+            print(
+                f"Warning: No metadata found for CatBoost model. Looking for: {metadata_pattern}"
+            )
+            print(f"Available files: {os.listdir(models_dir)}")
+            return {
+                "model": catboost_model,
+                "feature_columns": [
+                    f"feature_{i}" for i in range(catboost_model.get_n_features_in())
+                ],
+                "accuracy": 0.0,
+                "model_type": "catboost",
+            }
+
     else:
         # XGBoost and Random Forest naming convention
         pattern = f"{model_type}_nfl_spread_model_*.pkl"
@@ -83,6 +138,9 @@ def get_feature_importance(model_data, model_type, top_n=15):
     elif model_type == "lgbm":
         # LightGBM feature importance
         importance = model.feature_importance(importance_type="gain")
+    elif model_type == "catboost":
+        # CatBoost feature importance
+        importance = model.get_feature_importance()
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
@@ -97,12 +155,13 @@ def get_feature_importance(model_data, model_type, top_n=15):
 
 
 def compare_feature_importance():
-    """Compare feature importance between XGBoost, Random Forest, and LightGBM models"""
+    """Compare feature importance between XGBoost, Random Forest, LightGBM, and CatBoost models"""
 
-    # Load all three models
+    # Load all four models
     xgb_data = load_latest_model("xgb")
     rf_data = load_latest_model("rf")
     lgbm_data = load_latest_model("lgbm")
+    catboost_data = load_latest_model("catboost")
 
     # Check which models are available
     available_models = {}
@@ -112,6 +171,8 @@ def compare_feature_importance():
         available_models["rf"] = rf_data
     if lgbm_data is not None:
         available_models["lgbm"] = lgbm_data
+    if catboost_data is not None:
+        available_models["catboost"] = catboost_data
 
     if len(available_models) == 0:
         print("Could not load any models!")
@@ -120,9 +181,12 @@ def compare_feature_importance():
     print("\nMODEL ACCURACY COMPARISON:")
     print("=" * 40)
     for model_type, model_data in available_models.items():
-        model_name = {"xgb": "XGBoost", "rf": "Random Forest", "lgbm": "LightGBM"}[
-            model_type
-        ]
+        model_name = {
+            "xgb": "XGBoost",
+            "rf": "Random Forest",
+            "lgbm": "LightGBM",
+            "catboost": "CatBoost",
+        }[model_type]
         print(f"{model_name}: {model_data['accuracy']:.4f}")
 
     # Get feature importance for all available models
@@ -137,9 +201,12 @@ def compare_feature_importance():
 
     # Print top features for each model
     for model_type, features in model_features.items():
-        model_name = {"xgb": "XGBOOST", "rf": "RANDOM FOREST", "lgbm": "LIGHTGBM"}[
-            model_type
-        ]
+        model_name = {
+            "xgb": "XGBOOST",
+            "rf": "RANDOM FOREST",
+            "lgbm": "LIGHTGBM",
+            "catboost": "CATBOOST",
+        }[model_type]
         print("\n" + "=" * 60)
         print(f"TOP 15 FEATURES - {model_name}")
         print("=" * 60)
@@ -154,8 +221,18 @@ def compare_feature_importance():
         if num_models == 1:
             axes = [axes]
 
-        colors = {"xgb": "steelblue", "rf": "forestgreen", "lgbm": "orange"}
-        model_names = {"xgb": "XGBoost", "rf": "Random Forest", "lgbm": "LightGBM"}
+        colors = {
+            "xgb": "steelblue",
+            "rf": "forestgreen",
+            "lgbm": "orange",
+            "catboost": "purple",
+        }
+        model_names = {
+            "xgb": "XGBoost",
+            "rf": "Random Forest",
+            "lgbm": "LightGBM",
+            "catboost": "CatBoost",
+        }
 
         for i, (model_type, features) in enumerate(model_features.items()):
             ax = axes[i]

@@ -38,11 +38,12 @@ data/
 
 # Model files (can be large)
 models/*.pkl
+models/*.cbm
+models/cat_boost_*
+models/*catboost*
 
-# Evaluation outputs
-evaluation/*.png
-evaluation/*.jpg
-evaluation/*.pdf
+catboost_info/
+
 
 # IDE
 .vscode/
