@@ -389,53 +389,18 @@ if X_test.isna().any().any():
     print(X_test.isna().sum())
 
 # -------------------------------
-# 10. TRAIN MODEL
-# -------------------------------
-print("Training XGBoost model...")
-model = XGBClassifier(
-    n_estimators=100,
-    learning_rate=0.1,
-    max_depth=5,
-    random_state=42,
-    use_label_encoder=False,
-    eval_metric="logloss",
-)
+# 10. SAVE PROCESSED DATA
+print("Saving processed data and encoders...")
+data_file = "processed_nfl_data.pkl"
+data_path = os.path.join("data", data_file)
 
-print("Fitting model to training data...")
-try:
-    model.fit(X_train, y_train)
-    print("Model fitting completed successfully!")
-
-    print("Making predictions on test data...")
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    print(f"\n✅ Model Accuracy (2022–2023 Test): {accuracy:.4f}")
-
-except Exception as e:
-    print(f"ERROR during model training/prediction: {e}")
-    print("Model fit status:", hasattr(model, "_Booster"))
-    raise
-
-# -------------------------------
-# 11. SAVE MODEL & METADATA
-# -------------------------------
-models_dir = os.path.join(os.getcwd(), "models")
-os.makedirs(models_dir, exist_ok=True)
-
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-model_filename = f"xgb_nfl_spread_model_{timestamp}_acc{accuracy:.3f}.pkl"
-model_path = os.path.join(models_dir, model_filename)
-
-model_data = {
-    "model": model,
+data = {
+    "X_train": X_train,
+    "y_train": y_train,
+    "X_test": X_test,
+    "y_test": y_test,
     "feature_columns": feature_columns,
     "label_encoders": le_dict,
-    "accuracy": accuracy,
-    "training_years": "1999–2021",
-    "testing_years": "2022–2023",
-    "timestamp": timestamp,
 }
-joblib.dump(model_data, model_path)
-
-print(f"\nModel saved to: {model_path}")
-print(f"Training samples: {len(X_train)}, Test samples: {len(X_test)}")
+joblib.dump(data, data_path)
+print(f"Processed data saved to {data_path}")

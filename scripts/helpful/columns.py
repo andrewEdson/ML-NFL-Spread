@@ -7,3 +7,7 @@ print(df.columns)
 
 team_stats = nfl.import_weekly_data([2023])
 print(team_stats.columns)
+
+injuries = nfl.import_injuries([2023])
+
+print(injuries.columns)
