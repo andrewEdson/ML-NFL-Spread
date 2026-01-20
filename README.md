@@ -178,37 +178,37 @@ Result: Realistic 53% accuracy representing genuine predictive capability for fu
 - SHAP framework for model explainability
 - Dual categorical handling (encoding and native approaches)
 
-## 📁 Project Structure
-
-```
 ## Project Structure
 
 ```
-
 ML-NFL-Spread/
 ├── scripts/
-│ ├── model_scripts/
-│ │ ├── xgb_train.py # XGBoost training with feature importance
-│ │ ├── rf_train.py # Random Forest training
-│ │ ├── lgbm_train.py # LightGBM with top-20 feature reporting
-│ │ └── cat_boost_train.py # CatBoost training
-│ ├── data_scripts/
-│ │ ├── download_data.py # Historical data preprocessing pipeline
-│ │ └── 2025_test_data.py # 2025 season test dataset generation
-│ └── helpful/
-│ ├── train.py # Legacy training script
-│ ├── train_from_processed.py # Fast training from saved data
-│ └── columns.py # Data exploration utilities
+│   ├── model_scripts/
+│   │   ├── xgb_train.py           # XGBoost training with feature importance
+│   │   ├── rf_train.py            # Random Forest training
+│   │   ├── lgbm_train.py          # LightGBM with top-20 feature reporting
+│   │   └── cat_boost_train.py     # CatBoost training
+│   ├── data_scripts/
+│   │   └── download_data.py       # Historical data preprocessing pipeline
+│   └── helpful/
+│       ├── train.py               # Legacy training script
+│       ├── train_from_processed.py # Fast training from saved data
+│       └── columns.py             # Data exploration utilities
 ├── evaluation/
-│ ├── eval.py # Multi-model comparison
-│ ├── shap_eval.py # SHAP explainability analysis
-│ ├── ensemble_test.py # 4-model ensemble evaluation
-│ └── 2025_test.py # 2025 season evaluation
-├── models/ # Trained model files (.pkl, .cbm)
-├── data/ # Processed datasets (gitignored)
-├── requirements.txt # Python dependencies
-└── README.md # Project documentation
-
+│   ├── eval.py                    # Multi-model comparison
+│   ├── shap_eval.py               # SHAP explainability analysis
+│   ├── ensemble_test.py           # 4-model ensemble evaluation
+│   ├── ensemble_results.png       # Ensemble performance visualization
+│   ├── model_comparison.png       # Model comparison charts
+│   ├── xgb_shap_top_15_features.png # SHAP visualization
+│   └── xgb_shap_top_25_features.csv # Feature importance data
+├── documentation/
+│   └── initial_eval.md            # Initial evaluation documentation
+├── models/                        # Trained model files (.pkl, .cbm)
+├── data/                          # Processed datasets (gitignored)
+├── catboost_info/                 # CatBoost training logs
+├── requirements.txt               # Python dependencies (note: check spelling)
+└── README.md                      # Project documentation
 ```
 
 ## Key Components
@@ -223,14 +223,12 @@ ML-NFL-Spread/
 ### Data Processing Scripts
 
 - **download_data.py**: Complete historical data preprocessing pipeline (1999-2024)
-- **2025_test_data.py**: Generates test dataset for 2025 season predictions with all engineered features
 
 ### Analysis Scripts
 
 - **eval.py**: Comprehensive multi-model feature importance comparison
 - **shap_eval.py**: SHAP explainability analysis with visualizations
 - **ensemble_test.py**: 4-model ensemble evaluation on real test data
-- **2025_test.py**: Evaluation framework for current season predictions
 - **columns.py**: Data exploration and column analysis utilities
 
 ## Feature Engineering
@@ -263,21 +261,25 @@ ML-NFL-Spread/
 Analysis reveals zero overlap in top-10 features across all four models, demonstrating complementary learning patterns optimal for ensemble approaches:
 
 **Random Forest Strategy:**
+
 - Personnel-driven analysis (QB performance, coaching impact, referee patterns)
 - Betting market context (lines and spreads)
 - Advanced efficiency metrics (EPA across all phases)
 
 **XGBoost Strategy:**
+
 - Game flow dynamics (receiving performance, turnover statistics)
 - Position-specific injury impact assessment
 - Situational advantages (coaching, rest patterns)
 
 **LightGBM Strategy:**
+
 - EPA-based efficiency metrics across game phases
 - Encoded personnel factors (QB and coaching features)
 - Betting market signals (total line information)
 
 **CatBoost Strategy:**
+
 - Native categorical processing (unencoded QB names, coaches, referees)
 - Team identity indicators
 - Efficiency metrics (EPA, rushing performance)
@@ -339,4 +341,7 @@ This project is available for educational and portfolio purposes.
 ---
 
 **Disclaimer**: This project is intended for educational and research purposes only. Sports betting involves financial risk and should be approached responsibly.
+
+```
+
 ```
