@@ -37,7 +37,6 @@ team_stats = (
             "rushing_tds": "sum",
             "receiving_yards": "sum",
             "receiving_tds": "sum",
-            "fantasy_points": "sum",
             "sack_fumbles": "sum",
             "passing_epa": "sum",
             "rushing_epa": "sum",
@@ -66,7 +65,6 @@ cols_to_shift = [
     "rushing_tds",
     "receiving_yards",
     "receiving_tds",
-    "fantasy_points",
     "sack_fumbles",
     "passing_epa",
     "rushing_epa",
@@ -271,9 +269,6 @@ base_numerical_features = [
     "spread_line",
     "away_spread_odds",
     "home_spread_odds",
-    "total_line",
-    "under_odds",
-    "over_odds",
 ]
 
 team_stat_base = cols_to_shift
@@ -315,11 +310,8 @@ categorical_features = [
     "away_team",
     "home_team",
     "div_game",
-    "away_qb_name",
-    "home_qb_name",
     "away_coach",
     "home_coach",
-    "referee",
 ]
 
 df_clean = df[numerical_features + categorical_features + ["home_covered"]].copy()

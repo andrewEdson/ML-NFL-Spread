@@ -36,7 +36,7 @@ params = {
     "metric": "binary_logloss",
     "boosting_type": "gbdt",
     "learning_rate": 0.1,
-    "num_leaves": 16,
+    "num_leaves": 14,
     "verbose": -1,
 }
 lgb_model = lgb.train(params, lgb_train, num_boost_round=100)
@@ -46,9 +46,31 @@ y_pred = (lgb_model.predict(X_test) > 0.5).astype(int)
 accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy: {accuracy:.4f}")
 
+# Get and print feature importances
+print("\n" + "=" * 60)
+print("TOP FEATURES BY IMPORTANCE")
+print("=" * 60)
+
+feature_names = data_files["feature_columns"]
+feature_importance = lgb_model.feature_importance(importance_type="gain")
+
+# Create dataframe of feature importances
+importance_df = pd.DataFrame(
+    {"Feature": feature_names, "Importance": feature_importance}
+).sort_values("Importance", ascending=False)
+
+# Print top 20 features
+print("\nTop 20 Most Important Features:")
+print("-" * 60)
+for idx, row in importance_df.head(20).iterrows():
+    print(f"{row['Feature']:50s} {row['Importance']:10.2f}")
+
+print("\n" + "=" * 60)
+
 # Save model
 models_dir = "models"
 os.makedirs(models_dir, exist_ok=True)
 model_path = os.path.join(models_dir, "lgbm_model.pkl")
 lgb_model.save_model(model_path)
+
 print(f"Model saved to: {model_path}")
