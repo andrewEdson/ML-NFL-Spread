@@ -36,7 +36,7 @@ params = {
     "metric": "binary_logloss",
     "boosting_type": "gbdt",
     "learning_rate": 0.1,
-    "num_leaves": 31,
+    "num_leaves": 16,
     "verbose": -1,
 }
 lgb_model = lgb.train(params, lgb_train, num_boost_round=100)
