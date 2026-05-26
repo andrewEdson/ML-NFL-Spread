@@ -1,0 +1,126 @@
+/* Minimal, dependency-free styling for the NFL Spread Prediction results page */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f7f8fa;
+}
+
+.hero {
+  background: linear-gradient(135deg, #0b3d91 0%, #1e3a8a 100%);
+  color: #ffffff;
+  padding: 3rem 1.5rem 2.5rem;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  max-width: 780px;
+  margin: 0 auto;
+  font-size: 1.05rem;
+  color: #e5e7eb;
+}
+
+.metric-section {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem 0;
+}
+
+.metric-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.metric-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+}
+
+.metric-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #0b3d91;
+  line-height: 1.1;
+}
+
+.metric-note {
+  font-size: 0.92rem;
+  color: #4b5563;
+}
+
+.results {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1.25rem 2rem;
+}
+
+.results h2 {
+  font-size: 1.5rem;
+  margin: 1.5rem 0 1rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.4rem;
+}
+
+.result {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 0 0 1.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.result img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.result figcaption {
+  margin-top: 0.9rem;
+  font-size: 0.97rem;
+  color: #374151;
+}
+
+.result figcaption strong {
+  color: #0b3d91;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem 1rem 2rem;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+@media (min-width: 720px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}

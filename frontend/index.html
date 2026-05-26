@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFL Spread Prediction — Results</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <h1>NFL Spread Prediction with Machine Learning</h1>
+    <p class="subtitle">
+      A machine learning system that predicts whether the home team will cover
+      the NFL betting spread, using 25+ years of historical data,
+      78+ engineered features, ensemble modeling, and SHAP-based explainability.
+      Trained with chronological validation (1999–2021 train, 2022–2023+ test)
+      to prevent data leakage.
+    </p>
+  </header>
+
+  <section class="metric-section">
+    <div class="metric-card">
+      <span class="metric-label">Chronological Validation Accuracy</span>
+      <span class="metric-value">53.96%</span>
+      <span class="metric-note">
+        Above the ~52.4% breakeven needed to beat the standard −110 vig in
+        NFL spread betting markets.
+      </span>
+    </div>
+  </section>
+
+  <main class="results">
+    <h2>Result Graphs</h2>
+
+    <figure class="result">
+      <img src="../evaluation/model_comparison.png" alt="Bar chart comparing accuracy of individual models" />
+      <figcaption>
+        <strong>Model Comparison.</strong> Side-by-side accuracy of the
+        individual gradient-boosting and tree-based models (XGBoost, LightGBM,
+        CatBoost, Random Forest) evaluated on the held-out chronological test
+        set. This visualizes how each base learner performs on its own before
+        being combined into the final ensemble.
+      </figcaption>
+    </figure>
+
+    <figure class="result">
+      <img src="../evaluation/ensemble_results.png" alt="Ensemble model performance results" />
+      <figcaption>
+        <strong>Ensemble Results.</strong> Performance of the final ensemble
+        that combines the four base models. The ensemble reaches
+        <strong>53.96% accuracy</strong> on chronological validation, beating
+        each of the individual models and demonstrating the value of model
+        diversity for spread prediction.
+      </figcaption>
+    </figure>
+
+    <figure class="result">
+      <img src="../evaluation/xgb_shap_top_15_features.png" alt="SHAP summary plot of top 15 features for the XGBoost model" />
+      <figcaption>
+        <strong>Top 15 SHAP Features (XGBoost).</strong> SHAP explainability
+        plot showing the 15 features with the largest impact on XGBoost's
+        spread predictions. Each point is a game; horizontal position shows
+        how much that feature pushed the prediction toward "home cover" or
+        "home no cover", and color encodes the feature's value. This reveals
+        which signals — betting market context, rolling team performance,
+        injuries, rest, etc. — actually drive the model.
+      </figcaption>
+    </figure>
+  </main>
+
+  <footer>
+    <p>NFL Spread Prediction · static results dashboard · no build step required</p>
+  </footer>
+</body>
+</html>
